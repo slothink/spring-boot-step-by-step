@@ -10,18 +10,29 @@ buildscript {
         maven {
             url "http://repo.gradle.org/gradle/repo"
         }
+        maven { url 'http://repo.spring.io/plugins-release' }
     }
     dependencies {
         classpath 'com.h2database:h2:1.3.170'
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.3.3.RELEASE")
-        classpath 'org.springframework:springloaded:1.2.0.RELEASE'
+        classpath 'org.springframework:springloaded:1.2.5.RELEASE'
+        classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.7' // support 'provided', 'optional' scope
     }
 }
-
 
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
+
+
+// support 'provided', 'optional' scope
+configure(allprojects) {
+    apply plugin: 'propdeps'
+    apply plugin: 'propdeps-maven'
+    apply plugin: 'propdeps-idea'
+    apply plugin: 'propdeps-eclipse'
+}
+
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -47,6 +58,8 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
     testCompile("org.springframework.boot:spring-boot-starter-test")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
+    provided "org.projectlombok:lombok:1.16.6"
+    compile 'commons-io:commons-io:2.4'
 }
 
 bootRepackage {
