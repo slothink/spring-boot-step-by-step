@@ -180,6 +180,7 @@ local.properties
 
 
 ### Application
-steward-01/.idea
-steward-01/build
-steward-01/.gradle
+.idea
+*/*.iml
+*/build
+*/.gradle
