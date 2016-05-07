@@ -1,4 +1,4 @@
-package world.sai.steward.core.user;
+package world.sai.steward.core.test;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Import;

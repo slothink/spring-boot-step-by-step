@@ -4,11 +4,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import lombok.Getter;
+import lombok.Setter;
 import world.sai.steward.core.user.User;
 import world.sai.steward.core.user.UserService;
+import world.sai.steward.util.ISO8601Utils;
+import world.sai.steward.web.dto.UserDto;
 import world.sai.steward.web.model.ApiResult;
 
+import java.util.Date;
 import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 
 /**
  * Created by sai on 2016. 3. 18..
@@ -27,10 +42,21 @@ public class UserController {
      * @return 등록된 사용자 정보를 담은 Api 처리 결과
      */
     @RequestMapping(value = "/rest/v1/users", method = RequestMethod.POST)
-    public ApiResult<User> add(@RequestBody User command) {
+    public ApiResult<UserDto> add(@RequestBody CreateUserRequest command) {
         try {
-            User createdUser =  userService.create(command);
-            return new ApiResult<>(createdUser);
+            User user = new User();
+            user.setName(command.getName());
+            user.setBirthday(ISO8601Utils.parse(command.getBirthday()));
+            user.setLoginId(command.getLoginId());
+            user.setAge(command.getAge());
+            User createdUser =  userService.create(user);
+            UserDto dto = new UserDto();
+            dto.setId(createdUser.getId());
+            dto.setName(createdUser.getName());
+            dto.setAge(createdUser.getAge());
+            dto.setBirthday(ISO8601Utils.format(createdUser.getBirthday(), true));
+            dto.setLoginId(createdUser.getLoginId());
+            return new ApiResult<>(dto);
         }catch(RuntimeException e) {
             return new ApiResult<>(e);
         }
@@ -79,4 +105,16 @@ public class UserController {
         }
     }
 
+    @Getter
+    @Setter
+    public static class CreateUserRequest {
+
+        private String name;
+
+        private Integer age;
+
+        private String loginId;
+
+        private String birthday;
+    }
 }

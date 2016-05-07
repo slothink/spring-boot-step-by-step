@@ -8,10 +8,12 @@ import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 
+import world.sai.steward.core.test.CoreTester;
+
 /**
  * Created by sai on 2016. 4. 14..
  */
-public class UserRepositoryTest extends DefaultTest {
+public class UserRepositoryTest extends CoreTester {
 
     @Autowired
     private UserRepository userRepository;
