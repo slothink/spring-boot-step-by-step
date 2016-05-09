@@ -7,10 +7,14 @@ import org.springframework.web.bind.annotation.*;
 
 import lombok.Getter;
 import lombok.Setter;
+import world.sai.steward.core.user.DuplicateLoginIdException;
 import world.sai.steward.core.user.User;
 import world.sai.steward.core.user.UserService;
 import world.sai.steward.util.ISO8601Utils;
 import world.sai.steward.web.dto.UserDto;
+import world.sai.steward.web.mapper.Object2ObjectMapper;
+import world.sai.steward.web.model.ApiErrorCode;
+import world.sai.steward.web.model.ApiErrorType;
 import world.sai.steward.web.model.ApiResult;
 
 import java.util.Date;
@@ -36,6 +40,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private Object2ObjectMapper mapper;
+
     /**
      * 사용자를 등록한다
      * @param command 등록할 사용자 정보
@@ -50,14 +57,10 @@ public class UserController {
             user.setLoginId(command.getLoginId());
             user.setAge(command.getAge());
             User createdUser =  userService.create(user);
-            UserDto dto = new UserDto();
-            dto.setId(createdUser.getId());
-            dto.setName(createdUser.getName());
-            dto.setAge(createdUser.getAge());
-            dto.setBirthday(ISO8601Utils.format(createdUser.getBirthday(), true));
-            dto.setLoginId(createdUser.getLoginId());
-            return new ApiResult<>(dto);
-        }catch(RuntimeException e) {
+            return new ApiResult<>(mapper.toUserDto(createdUser));
+        }catch (DuplicateLoginIdException e) {
+            return new ApiResult<>(ApiErrorType.MESSAGE, ApiErrorCode.DUPLICATE_CODE, "로그인 ID가 중복됩니다");
+        } catch(RuntimeException e) {
             return new ApiResult<>(e);
         }
     }

@@ -27,7 +27,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User create(User user) {
+    public User create(User user) throws DuplicateLoginIdException {
+        if(repository.findByLoginId(user.getLoginId()) != null) {
+            throw new DuplicateLoginIdException();
+        }
         return repository.save(user);
     }
 

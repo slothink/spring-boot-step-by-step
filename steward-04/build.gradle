@@ -70,6 +70,8 @@ dependencies {
     provided "org.projectlombok:lombok:1.16.6"
     compile 'commons-io:commons-io:2.4'
     compile 'com.h2database:h2'
+    compile group: 'org.modelmapper', name: 'modelmapper', version: '0.7.5'
+    compile group: 'org.modelmapper.extensions', name: 'modelmapper-spring', version: '0.7.5'
 
     compile group: 'com.mysema.querydsl', name: 'querydsl-core', version: queryDslVersion
     compile group: 'com.mysema.querydsl', name: 'querydsl-jpa', version: queryDslVersion

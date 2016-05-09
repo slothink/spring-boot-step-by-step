@@ -10,7 +10,7 @@ public interface UserService {
 
     List<User> getAllUsers();
 
-    User create(User user);
+    User create(User user) throws DuplicateLoginIdException;
 
     User update(User user);
 
